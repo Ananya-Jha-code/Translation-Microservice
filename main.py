@@ -4,7 +4,7 @@ from fastapi.exceptions import RequestValidationError
 from utils.exception_handlers import (
     custom_validation_exception_handler,
     unsupported_lang_exception_handler,
-    UnsupportedLanguageException  # the custom class
+    UnsupportedLanguageException
 )
 
 
