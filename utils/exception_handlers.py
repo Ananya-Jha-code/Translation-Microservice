@@ -1,7 +1,17 @@
+from fastapi.requests import Request
 from fastapi import Request
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
 from fastapi.exception_handlers import request_validation_exception_handler
+from fastapi import HTTPException, status
+
+
+class UnsupportedLanguageException(HTTPException):
+    def __init__(self, lang_code: str):
+        super().__init__(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"Unsupported language code: '{lang_code}'. Supported: hi, ta, kn, bn"
+        )
 
 
 async def custom_validation_exception_handler(request: Request, exc: RequestValidationError):
@@ -17,3 +27,10 @@ async def custom_validation_exception_handler(request: Request, exc: RequestVali
             )
 
     return await request_validation_exception_handler(request, exc)
+
+
+async def unsupported_lang_exception_handler(request: Request, exc: UnsupportedLanguageException):
+    return JSONResponse(
+        status_code=exc.status_code,
+        content={"error": exc.detail}
+    )

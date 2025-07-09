@@ -8,6 +8,7 @@ from models.schemas import (
 from services.translator import translate_text, bulk_translate
 from utils.logger import log_request
 from utils.validator import validate_lang
+from utils.exception_handlers import UnsupportedLanguageException
 
 router = APIRouter()
 
@@ -15,7 +16,7 @@ router = APIRouter()
 @router.post("/translate", response_model=TranslationResponse)
 async def translate(request: TranslationRequest):
     if not validate_lang(request.target_lang):
-        raise HTTPException(status_code=400, detail="Invalid language code.")
+        raise UnsupportedLanguageException(request.target_lang)
 
     translated = await translate_text(request.text, request.target_lang)
     log_request(request.text, request.target_lang, translated)
@@ -29,7 +30,7 @@ async def translate(request: TranslationRequest):
 @router.post("/translate/bulk", response_model=BulkTranslationResponse)
 async def translate_bulk(request: BulkTranslationRequest):
     if not validate_lang(request.target_lang):
-        raise HTTPException(status_code=400, detail="Invalid language code.")
+        raise UnsupportedLanguageException(request.target_lang)
 
     translations = await bulk_translate(request.texts, request.target_lang)
     for orig, trans in zip(request.texts, translations):
