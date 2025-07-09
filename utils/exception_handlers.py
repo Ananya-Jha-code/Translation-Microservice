@@ -16,5 +16,4 @@ async def custom_validation_exception_handler(request: Request, exc: RequestVali
                 content={"error": "Text too long. Max 1000 characters allowed."}
             )
 
-    # Fallback for other validation errors
     return await request_validation_exception_handler(request, exc)

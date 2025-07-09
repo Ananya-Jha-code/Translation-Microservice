@@ -1,7 +1,6 @@
 import sqlite3
 from datetime import datetime
 
-# Setup DB connection and table
 conn = sqlite3.connect("logs.db", check_same_thread=False)
 cursor = conn.cursor()
 
